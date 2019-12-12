@@ -1,5 +1,4 @@
 import React from 'react'
-
 import Filters from './Filters'
 import PetBrowser from './PetBrowser'
 
@@ -10,10 +9,29 @@ class App extends React.Component {
     this.state = {
       pets: [],
       filters: {
-        type: 'all'
+        type: 'all'  
       }
     }
   }
+
+  componentDidMount(){
+    fetch('/api/pets')
+    .then(resp => resp.json())
+    .then(pets => {
+      this.setState({pets})
+    })
+  }
+
+  onFindPetsClick = () => {
+    if (this.state.filters.type === 'all') {
+      '/api/pets'
+    }
+    else {
+      `/api/pets?type=${this.state.filters.type}`
+    }
+  }
+
+
 
   render() {
     return (
@@ -24,15 +42,15 @@ class App extends React.Component {
         <div className="ui container">
           <div className="ui grid">
             <div className="four wide column">
-              <Filters />
+              <Filters pets = {this.state.pets.type}/>
             </div>
             <div className="twelve wide column">
-              <PetBrowser />
-            </div>
+              <PetBrowser key={this.state.pets.id} pets = {this.state.pets}/>
+                </div>
           </div>
         </div>
       </div>
-    )
+    ) 
   }
 }
 
